@@ -11,4 +11,5 @@ class Note(val title: String, val description: String, val priority: Int) {
 
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0
+
 }
