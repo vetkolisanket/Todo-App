@@ -10,9 +10,5 @@ import androidx.room.PrimaryKey
 class Note(val title: String, val description: String, val priority: Int) {
 
     @PrimaryKey(autoGenerate = true)
-    private var id: Int = 0
-
-    fun setId(id: Int) {
-        this.id = id
-    }
+    var id: Int = 0
 }
