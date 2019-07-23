@@ -19,9 +19,11 @@
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/tvPriority" app:layout_constraintEnd_toEndOf="parent"
+                android:id="@+id/tvPriority"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:text="1" android:textAppearance="@style/TextAppearance.AppCompat.Large"/>
+                tools:text="1"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"/>
 
         <TextView
                 android:layout_width="0dp" android:layout_height="wrap_content"
@@ -36,7 +38,8 @@
         />
 
         <TextView
-                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:id="@+id/tvDescription"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvTitle"
