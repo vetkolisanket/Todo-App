@@ -30,6 +30,10 @@ class NotesAdapter: RecyclerView.Adapter<NotesAdapter.NotesViewHolder>() {
         notifyDataSetChanged()
     }
 
+    fun getNoteAt(position: Int): Note {
+        return notes[position]
+    }
+
     inner class NotesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(note: Note) {
             itemView.tvTitle.text = note.title
