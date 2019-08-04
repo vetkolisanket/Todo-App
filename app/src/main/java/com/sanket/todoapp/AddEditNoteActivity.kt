@@ -10,14 +10,24 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_add_note.*
 
-class AddNoteActivity : AppCompatActivity() {
+class AddEditNoteActivity : AppCompatActivity() {
 
     companion object {
+        const val EXTRA_ID = "com.sanket.todoapp.EXTRA_ID"
         const val EXTRA_TITLE = "com.sanket.todoapp.EXTRA_TITLE"
         const val EXTRA_DESCRIPTION = "com.sanket.todoapp.EXTRA_DESCRIPTION"
         const val EXTRA_PRIORITY = "com.sanket.todoapp.EXTRA_PRIORITY"
 
-        fun newIntent(context: Context) = Intent(context, AddNoteActivity::class.java)
+        fun newIntent(context: Context) = Intent(context, AddEditNoteActivity::class.java)
+
+        fun newIntent(context: Context, note: Note): Intent {
+            val intent = newIntent(context)
+            intent.putExtra(EXTRA_ID, note.id)
+            intent.putExtra(EXTRA_TITLE, note.title)
+            intent.putExtra(EXTRA_DESCRIPTION, note.description)
+            intent.putExtra(EXTRA_PRIORITY, note.priority)
+            return intent
+        }
 
     }
 
@@ -58,13 +68,25 @@ class AddNoteActivity : AppCompatActivity() {
         data.putExtra(EXTRA_DESCRIPTION, description)
         data.putExtra(EXTRA_PRIORITY, priority)
 
+        if (intent.hasExtra(EXTRA_ID)) {
+            data.putExtra(EXTRA_ID, intent.getIntExtra(EXTRA_ID, -1))
+        }
+
         setResult(Activity.RESULT_OK, data)
         finish()
     }
 
     private fun init() {
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_close)
-        title = "Add Note"
+
+        if (intent.hasExtra(EXTRA_ID)) {
+            title = "Edit Note"
+            etTitle.setText(intent.getStringExtra(EXTRA_TITLE))
+            etDescription.setText(intent.getStringExtra(EXTRA_DESCRIPTION))
+            npPriority.value = intent.getIntExtra(EXTRA_PRIORITY, 1)
+        } else {
+            title = "Add Note"
+        }
 
         npPriority.minValue = 1
         npPriority.maxValue = 10

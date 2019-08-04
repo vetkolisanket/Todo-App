@@ -18,6 +18,7 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         const val REQUEST_ADD_NOTE = 1001
+        const val REQUEST_EDIT_NOTE = 1002
     }
 
     private val notesViewModel by unsafeLazy { ViewModelProviders.of(this).get(NotesViewModel::class.java) }
@@ -48,15 +49,34 @@ class MainActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (REQUEST_ADD_NOTE == requestCode && Activity.RESULT_OK == resultCode) {
-            val title = data!!.getStringExtra(AddNoteActivity.EXTRA_TITLE)
-            val description = data.getStringExtra(AddNoteActivity.EXTRA_DESCRIPTION)
-            val priority = data.getIntExtra(AddNoteActivity.EXTRA_PRIORITY, 1)
+            val (title, description, priority) = getNoteData(data)
 
             notesViewModel.insert(Note(title, description, priority))
             Toast.makeText(this, "Note saved", Toast.LENGTH_SHORT).show()
+        } else if (REQUEST_EDIT_NOTE == requestCode && Activity.RESULT_OK == resultCode) {
+
+            val id = data!!.getIntExtra(AddEditNoteActivity.EXTRA_ID, -1)
+
+            if (id == -1) {
+                Toast.makeText(this, "Error while updating note!", Toast.LENGTH_SHORT).show()
+            }
+
+            val (title, description, priority) = getNoteData(data)
+
+            val note = Note(title, description, priority)
+            note.id = id
+            notesViewModel.update(note)
+            Toast.makeText(this, "Note updated", Toast.LENGTH_SHORT).show()
         } else {
             Toast.makeText(this, "Note not saved", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun getNoteData(data: Intent?): Triple<String, String, Int> {
+        val title = data!!.getStringExtra(AddEditNoteActivity.EXTRA_TITLE)
+        val description = data.getStringExtra(AddEditNoteActivity.EXTRA_DESCRIPTION)
+        val priority = data.getIntExtra(AddEditNoteActivity.EXTRA_PRIORITY, 1)
+        return Triple(title, description, priority)
     }
 
     private fun init() {
@@ -65,13 +85,18 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initViews() {
-        fabAddNote.setOnClickListener { startActivityForResult(AddNoteActivity.newIntent(this), REQUEST_ADD_NOTE) }
+        fabAddNote.setOnClickListener { startActivityForResult(AddEditNoteActivity.newIntent(this), REQUEST_ADD_NOTE) }
 
         initRecyclerView()
     }
 
     private fun initRecyclerView() {
         rvNotes.layoutManager = LinearLayoutManager(this)
+        adapter.setCallback(object : NotesAdapter.Callback {
+            override fun onNoteClick(note: Note) {
+                startActivityForResult(AddEditNoteActivity.newIntent(this@MainActivity, note), REQUEST_EDIT_NOTE)
+            }
+        })
         rvNotes.adapter = adapter
 
         initSwipeToDismiss()

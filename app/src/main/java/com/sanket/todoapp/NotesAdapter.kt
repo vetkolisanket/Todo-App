@@ -11,6 +11,7 @@ import kotlinx.android.synthetic.main.item_note.view.*
 class NotesAdapter: RecyclerView.Adapter<NotesAdapter.NotesViewHolder>() {
 
     private val notes by unsafeLazy { mutableListOf<Note>() }
+    private var callback: NotesAdapter.Callback? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NotesViewHolder {
         return NotesViewHolder(parent.inflateView(R.layout.item_note))
@@ -34,11 +35,29 @@ class NotesAdapter: RecyclerView.Adapter<NotesAdapter.NotesViewHolder>() {
         return notes[position]
     }
 
+    fun setCallback(callback: Callback) {
+        this.callback = callback
+    }
+
     inner class NotesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
+        init {
+            itemView.setOnClickListener {
+                if (adapterPosition != RecyclerView.NO_POSITION) {
+                    callback!!.onNoteClick(notes[adapterPosition])
+                }
+            }
+        }
+
         fun bind(note: Note) {
             itemView.tvTitle.text = note.title
             itemView.tvDescription.text = note.description
             itemView.tvPriority.text = note.priority.toString()
         }
     }
+
+    interface Callback {
+        fun onNoteClick(note: Note)
+    }
+
 }
