@@ -122,7 +122,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun initViewModel() {
         notesViewModel.allNotes.observe(this, Observer {
-            adapter.setNotes(it)
+            adapter.submitList(it)
         })
     }
 }
