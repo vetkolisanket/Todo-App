@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity() {
+class NotesListActivity : AppCompatActivity() {
 
     companion object {
         const val REQUEST_ADD_NOTE = 1001
@@ -94,7 +94,7 @@ class MainActivity : AppCompatActivity() {
         rvNotes.layoutManager = LinearLayoutManager(this)
         adapter.setCallback(object : NotesAdapter.Callback {
             override fun onNoteClick(note: Note) {
-                startActivityForResult(AddEditNoteActivity.newIntent(this@MainActivity, note), REQUEST_EDIT_NOTE)
+                startActivityForResult(AddEditNoteActivity.newIntent(this@NotesListActivity, note), REQUEST_EDIT_NOTE)
             }
         })
         rvNotes.adapter = adapter
@@ -114,7 +114,7 @@ class MainActivity : AppCompatActivity() {
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 notesViewModel.delete(adapter.getNoteAt(viewHolder.adapterPosition))
-                Toast.makeText(this@MainActivity, "Note deleted", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@NotesListActivity, "Note deleted", Toast.LENGTH_SHORT).show()
             }
 
         }).attachToRecyclerView(rvNotes)
