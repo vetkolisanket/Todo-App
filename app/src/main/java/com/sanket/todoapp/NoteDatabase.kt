@@ -5,6 +5,7 @@ import android.os.AsyncTask
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 
 /**
@@ -23,7 +24,7 @@ abstract class NoteDatabase : RoomDatabase() {
         fun getInstance(context: Context): NoteDatabase {
             if (instance == null) {
                 instance = Room.databaseBuilder(context.applicationContext, NoteDatabase::class.java, "note_database")
-                    .fallbackToDestructiveMigration()
+                    .addMigrations(migration_1_2)
                     .addCallback(roomCallback)
                     .build()
             }
@@ -35,6 +36,13 @@ abstract class NoteDatabase : RoomDatabase() {
                 super.onCreate(db)
                 PopulateDbAsyncTask(instance!!).execute()
             }
+        }
+
+        val migration_1_2 = object : Migration(1, 2) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("ALTER TABLE note_table ADD COLUMN isCompleted BOOLEAN")
+            }
+
         }
 
         class PopulateDbAsyncTask(db: NoteDatabase) : AsyncTask<Void, Void, Void>() {
