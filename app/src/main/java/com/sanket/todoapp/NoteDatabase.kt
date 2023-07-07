@@ -11,7 +11,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 /**
  * Created by Sanket on 2019-07-12.
  */
-@Database(entities = [Note::class], version = 1)
+@Database(entities = [Note::class], version = 2)
 abstract class NoteDatabase : RoomDatabase() {
 
     abstract fun noteDao(): NoteDao
@@ -31,7 +31,7 @@ abstract class NoteDatabase : RoomDatabase() {
             return instance as NoteDatabase
         }
 
-        val roomCallback = object : RoomDatabase.Callback() {
+        val roomCallback = object : Callback() {
             override fun onCreate(db: SupportSQLiteDatabase) {
                 super.onCreate(db)
                 PopulateDbAsyncTask(instance!!).execute()
@@ -40,7 +40,7 @@ abstract class NoteDatabase : RoomDatabase() {
 
         val migration_1_2 = object : Migration(1, 2) {
             override fun migrate(database: SupportSQLiteDatabase) {
-                database.execSQL("ALTER TABLE note_table ADD COLUMN isCompleted BOOLEAN")
+                database.execSQL("ALTER TABLE note_table ADD COLUMN isCompleted INTEGER NOT NULL DEFAULT 0")
             }
 
         }

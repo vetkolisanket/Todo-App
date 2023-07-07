@@ -1,5 +1,6 @@
 package com.sanket.todoapp
 
+import android.graphics.Paint
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -25,7 +26,7 @@ class NotesAdapter() : ListAdapter<Note, NotesAdapter.NotesViewHolder>(DIFF_CALL
         }
     }
 
-    private var callback: NotesAdapter.Callback? = null
+    private var callback: Callback? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NotesViewHolder {
         return NotesViewHolder(parent.inflateView(R.layout.item_note))
@@ -54,14 +55,22 @@ class NotesAdapter() : ListAdapter<Note, NotesAdapter.NotesViewHolder>(DIFF_CALL
         }
 
         fun bind(note: Note) {
-            itemView.tvTitle.text = note.title
-            itemView.tvDescription.text = note.description
-            itemView.tvPriority.text = note.priority.toString()
+            itemView.apply {
+                tvTitle.text = note.title
+                tvDescription.text = note.description
+                tvPriority.text = note.priority.toString()
+                if (note.isCompleted) {
+                    ivCheck.setImageResource(R.drawable.ic_check_box)
+                    tvTitle.paintFlags = tvTitle.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+                } else {
+                    ivCheck.setImageResource(R.drawable.ic_check_box_outline)
+                    tvTitle.paintFlags = tvTitle.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
+                }
+            }
         }
     }
 
     interface Callback {
         fun onNoteClick(note: Note)
     }
-
 }

@@ -25,6 +25,18 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:text="1" />
 
+        <ImageView
+            android:id="@+id/ivCheck"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tvTitle"
+            app:layout_constraintBottom_toBottomOf="@id/tvTitle"
+            tools:srcCompat="@drawable/ic_check_box_outline"
+            android:gravity="center"
+            android:contentDescription="Check Mark"
+            tools:ignore="HardcodedText" />
+
         <TextView
             android:id="@+id/tvTitle"
             android:layout_width="0dp"
@@ -33,7 +45,7 @@
             android:lines="1"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             app:layout_constraintEnd_toStartOf="@+id/tvPriority"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@id/ivCheck"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Title 1" />
 
