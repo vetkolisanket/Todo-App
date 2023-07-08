@@ -20,7 +20,9 @@ class NotesAdapter() : ListAdapter<Note, NotesAdapter.NotesViewHolder>(DIFF_CALL
             }
 
             override fun areContentsTheSame(oldItem: Note, newItem: Note): Boolean {
-                return oldItem.title == newItem.title && oldItem.description == newItem.description && oldItem.priority == newItem.priority
+                return oldItem.title == newItem.title && oldItem.description == newItem.description
+                        && oldItem.priority == newItem.priority
+                        && oldItem.isCompleted == newItem.isCompleted
             }
 
         }
@@ -36,6 +38,16 @@ class NotesAdapter() : ListAdapter<Note, NotesAdapter.NotesViewHolder>(DIFF_CALL
         holder.bind(getItem(position))
     }
 
+    override fun onBindViewHolder(
+        holder: NotesViewHolder,
+        position: Int,
+        payloads: MutableList<Any>
+    ) {
+        if (payloads.isNotEmpty() && payloads.first() is Boolean) {
+            holder.setIsCompleted(payloads.first() as Boolean)
+        } else super.onBindViewHolder(holder, position, payloads)
+    }
+
     fun getNoteAt(position: Int): Note {
         return getItem(position)
     }
@@ -47,9 +59,17 @@ class NotesAdapter() : ListAdapter<Note, NotesAdapter.NotesViewHolder>(DIFF_CALL
     inner class NotesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         init {
+            itemView.ivCheck.setOnClickListener {
+                if (adapterPosition != RecyclerView.NO_POSITION) {
+                    val note = getItem(adapterPosition)
+                    note.isCompleted = note.isCompleted.not()
+                    callback?.onCheckClick(note)
+                    notifyItemChanged(adapterPosition, note.isCompleted)
+                }
+            }
             itemView.setOnClickListener {
                 if (adapterPosition != RecyclerView.NO_POSITION) {
-                    callback!!.onNoteClick(getItem(adapterPosition))
+                    callback?.onNoteClick(getItem(adapterPosition))
                 }
             }
         }
@@ -59,7 +79,13 @@ class NotesAdapter() : ListAdapter<Note, NotesAdapter.NotesViewHolder>(DIFF_CALL
                 tvTitle.text = note.title
                 tvDescription.text = note.description
                 tvPriority.text = note.priority.toString()
-                if (note.isCompleted) {
+                setIsCompleted(note.isCompleted)
+            }
+        }
+
+        fun setIsCompleted(isCompleted: Boolean) {
+            itemView.apply {
+                if (isCompleted) {
                     ivCheck.setImageResource(R.drawable.ic_check_box)
                     tvTitle.paintFlags = tvTitle.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
                 } else {
@@ -72,5 +98,6 @@ class NotesAdapter() : ListAdapter<Note, NotesAdapter.NotesViewHolder>(DIFF_CALL
 
     interface Callback {
         fun onNoteClick(note: Note)
+        fun onCheckClick(note: Note)
     }
 }

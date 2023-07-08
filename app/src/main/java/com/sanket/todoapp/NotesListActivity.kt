@@ -96,6 +96,10 @@ class NotesListActivity : AppCompatActivity() {
             override fun onNoteClick(note: Note) {
                 startActivityForResult(AddEditNoteActivity.newIntent(this@NotesListActivity, note), REQUEST_EDIT_NOTE)
             }
+
+            override fun onCheckClick(note: Note) {
+                notesViewModel.update(note)
+            }
         })
         rvNotes.adapter = adapter
 
