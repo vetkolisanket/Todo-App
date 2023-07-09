@@ -34,9 +34,14 @@ class NotesRepository(application: Application) {
         DeleteAllNoteAsyncTask(noteDao).execute()
     }
 
+    fun getNote(noteId: Int): Note {
+        return noteDao.getNote(noteId)
+    }
+
     companion object {
         class InsertNoteAsyncTask(private val noteDao: NoteDao) : AsyncTask<Note, Void, Void>() {
 
+            @Deprecated("Deprecated in Java")
             override fun doInBackground(vararg notes: Note): Void? {
                 noteDao.insert(notes[0])
                 return null
@@ -45,6 +50,7 @@ class NotesRepository(application: Application) {
 
         class UpdateNoteAsyncTask(private val noteDao: NoteDao) : AsyncTask<Note, Void, Void>() {
 
+            @Deprecated("Deprecated in Java")
             override fun doInBackground(vararg notes: Note): Void? {
                 noteDao.update(notes[0])
                 return null
@@ -53,6 +59,7 @@ class NotesRepository(application: Application) {
 
         class DeleteNoteAsyncTask(private val noteDao: NoteDao) : AsyncTask<Note, Void, Void>() {
 
+            @Deprecated("Deprecated in Java")
             override fun doInBackground(vararg notes: Note): Void? {
                 noteDao.delete(notes[0])
                 return null
@@ -61,6 +68,7 @@ class NotesRepository(application: Application) {
 
         class DeleteAllNoteAsyncTask(private val noteDao: NoteDao) : AsyncTask<Void, Void, Void>() {
 
+            @Deprecated("Deprecated in Java")
             override fun doInBackground(vararg voids: Void): Void? {
                 noteDao.deleteAll()
                 return null

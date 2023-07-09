@@ -50,6 +50,7 @@ abstract class NoteDatabase : RoomDatabase() {
             private val noteDao by lazy { db.noteDao() }
 
 
+            @Deprecated("Deprecated in Java")
             override fun doInBackground(vararg params: Void?): Void? {
                 noteDao.insert(Note("Title 1", "Description 1", 1))
                 noteDao.insert(Note("Title 2", "Description 2", 2))

@@ -8,7 +8,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import kotlinx.android.synthetic.main.activity_add_note.*
+import com.sanket.todoapp.databinding.ActivityAddNoteBinding
 
 class AddEditNoteActivity : AppCompatActivity() {
 
@@ -31,9 +31,15 @@ class AddEditNoteActivity : AppCompatActivity() {
 
     }
 
+    private val binding: ActivityAddNoteBinding by lazy {
+        ActivityAddNoteBinding.inflate(
+            layoutInflater
+        )
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_add_note)
+        setContentView(binding.root)
 
         init()
     }
@@ -43,8 +49,8 @@ class AddEditNoteActivity : AppCompatActivity() {
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
             R.id.actionSave -> {
                 saveNote()
                 return true
@@ -54,9 +60,9 @@ class AddEditNoteActivity : AppCompatActivity() {
     }
 
     private fun saveNote() {
-        val title = etTitle.text.toString()
-        val description = etDescription.text.toString()
-        val priority = npPriority.value
+        val title = binding.etTitle.text.toString()
+        val description = binding.etDescription.text.toString()
+        val priority = binding.npPriority.value
 
         if (title.isBlank()) {
             Toast.makeText(this, "Title cannot be blank", Toast.LENGTH_SHORT).show()
@@ -81,15 +87,18 @@ class AddEditNoteActivity : AppCompatActivity() {
 
         if (intent.hasExtra(EXTRA_ID)) {
             title = "Edit Note"
-            etTitle.setText(intent.getStringExtra(EXTRA_TITLE))
-            etDescription.setText(intent.getStringExtra(EXTRA_DESCRIPTION))
-            npPriority.value = intent.getIntExtra(EXTRA_PRIORITY, 1)
+            binding.apply {
+                etTitle.setText(intent.getStringExtra(EXTRA_TITLE))
+                etDescription.setText(intent.getStringExtra(EXTRA_DESCRIPTION))
+                npPriority.value = intent.getIntExtra(EXTRA_PRIORITY, 1)
+            }
         } else {
             title = "Add Note"
         }
-
-        npPriority.minValue = 1
-        npPriority.maxValue = 10
+        binding.apply {
+            npPriority.minValue = 1
+            npPriority.maxValue = 10
+        }
     }
 
 }

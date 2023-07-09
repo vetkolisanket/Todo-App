@@ -1,12 +1,12 @@
 package com.sanket.todoapp
 
 import android.graphics.Paint
-import android.view.View
+import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.item_note.view.*
+import com.sanket.todoapp.databinding.ItemNoteBinding
 
 /**
  * Created by Sanket on 2019-07-18.
@@ -31,7 +31,8 @@ class NotesAdapter() : ListAdapter<Note, NotesAdapter.NotesViewHolder>(DIFF_CALL
     private var callback: Callback? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NotesViewHolder {
-        return NotesViewHolder(parent.inflateView(R.layout.item_note))
+        val binding = ItemNoteBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return NotesViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: NotesViewHolder, position: Int) {
@@ -56,18 +57,17 @@ class NotesAdapter() : ListAdapter<Note, NotesAdapter.NotesViewHolder>(DIFF_CALL
         this.callback = callback
     }
 
-    inner class NotesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class NotesViewHolder(val binding: ItemNoteBinding) : RecyclerView.ViewHolder(binding.root) {
 
         init {
-            itemView.ivCheck.setOnClickListener {
+            binding.ivCheck.setOnClickListener {
                 if (adapterPosition != RecyclerView.NO_POSITION) {
                     val note = getItem(adapterPosition)
-                    note.isCompleted = note.isCompleted.not()
-                    callback?.onCheckClick(note)
-                    notifyItemChanged(adapterPosition, note.isCompleted)
+                    callback?.onCheckClick(note.id)
+//                    notifyItemChanged(adapterPosition, note.isCompleted)
                 }
             }
-            itemView.setOnClickListener {
+            binding.root.setOnClickListener {
                 if (adapterPosition != RecyclerView.NO_POSITION) {
                     callback?.onNoteClick(getItem(adapterPosition))
                 }
@@ -75,7 +75,7 @@ class NotesAdapter() : ListAdapter<Note, NotesAdapter.NotesViewHolder>(DIFF_CALL
         }
 
         fun bind(note: Note) {
-            itemView.apply {
+            binding.apply {
                 tvTitle.text = note.title
                 tvDescription.text = note.description
                 tvPriority.text = note.priority.toString()
@@ -84,7 +84,7 @@ class NotesAdapter() : ListAdapter<Note, NotesAdapter.NotesViewHolder>(DIFF_CALL
         }
 
         fun setIsCompleted(isCompleted: Boolean) {
-            itemView.apply {
+            binding.apply {
                 if (isCompleted) {
                     ivCheck.setImageResource(R.drawable.ic_check_box)
                     tvTitle.paintFlags = tvTitle.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
@@ -98,6 +98,6 @@ class NotesAdapter() : ListAdapter<Note, NotesAdapter.NotesViewHolder>(DIFF_CALL
 
     interface Callback {
         fun onNoteClick(note: Note)
-        fun onCheckClick(note: Note)
+        fun onCheckClick(noteId: Int)
     }
 }

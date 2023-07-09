@@ -3,6 +3,9 @@ package com.sanket.todoapp
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 /**
  * Created by Sanket on 2019-07-18.
@@ -26,6 +29,15 @@ class NotesViewModel(application: Application) : AndroidViewModel(application) {
 
     fun deleteAllNotes() {
         notesRepository.deleteAll()
+    }
+
+    fun onCheckClick(noteId: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val note = notesRepository.getNote(noteId)
+            note.isCompleted = note.isCompleted.not()
+            update(note)
+        }
+
     }
 
 }

@@ -12,7 +12,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.activity_main.*
+import com.sanket.todoapp.databinding.ActivityNotesListBinding
 
 class NotesListActivity : AppCompatActivity() {
 
@@ -21,12 +21,19 @@ class NotesListActivity : AppCompatActivity() {
         const val REQUEST_EDIT_NOTE = 1002
     }
 
-    private val notesViewModel by unsafeLazy { ViewModelProviders.of(this).get(NotesViewModel::class.java) }
+    private val notesViewModel by unsafeLazy {
+        ViewModelProviders.of(this).get(NotesViewModel::class.java)
+    }
     private val adapter by unsafeLazy { NotesAdapter() }
+    private val binding: ActivityNotesListBinding by lazy {
+        ActivityNotesListBinding.inflate(
+            layoutInflater
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(binding.root)
 
         init()
     }
@@ -36,8 +43,8 @@ class NotesListActivity : AppCompatActivity() {
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        return when (item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
             R.id.actionDeleteAllNotes -> {
                 notesViewModel.deleteAllNotes()
                 Toast.makeText(this, "All notes deleted", Toast.LENGTH_SHORT).show()
@@ -47,7 +54,9 @@ class NotesListActivity : AppCompatActivity() {
         }
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
         if (REQUEST_ADD_NOTE == requestCode && Activity.RESULT_OK == resultCode) {
             val (title, description, priority) = getNoteData(data)
 
@@ -76,7 +85,7 @@ class NotesListActivity : AppCompatActivity() {
         val title = data!!.getStringExtra(AddEditNoteActivity.EXTRA_TITLE)
         val description = data.getStringExtra(AddEditNoteActivity.EXTRA_DESCRIPTION)
         val priority = data.getIntExtra(AddEditNoteActivity.EXTRA_PRIORITY, 1)
-        return Triple(title, description, priority)
+        return Triple(title!!, description!!, priority)
     }
 
     private fun init() {
@@ -85,29 +94,39 @@ class NotesListActivity : AppCompatActivity() {
     }
 
     private fun initViews() {
-        fabAddNote.setOnClickListener { startActivityForResult(AddEditNoteActivity.newIntent(this), REQUEST_ADD_NOTE) }
+        binding.fabAddNote.setOnClickListener {
+            startActivityForResult(
+                AddEditNoteActivity.newIntent(
+                    this
+                ), REQUEST_ADD_NOTE
+            )
+        }
 
         initRecyclerView()
     }
 
     private fun initRecyclerView() {
-        rvNotes.layoutManager = LinearLayoutManager(this)
+        binding.rvNotes.layoutManager = LinearLayoutManager(this)
         adapter.setCallback(object : NotesAdapter.Callback {
             override fun onNoteClick(note: Note) {
-                startActivityForResult(AddEditNoteActivity.newIntent(this@NotesListActivity, note), REQUEST_EDIT_NOTE)
+                startActivityForResult(
+                    AddEditNoteActivity.newIntent(this@NotesListActivity, note),
+                    REQUEST_EDIT_NOTE
+                )
             }
 
-            override fun onCheckClick(note: Note) {
-                notesViewModel.update(note)
+            override fun onCheckClick(noteId: Int) {
+                notesViewModel.onCheckClick(noteId)
             }
         })
-        rvNotes.adapter = adapter
+        binding.rvNotes.adapter = adapter
 
         initSwipeToDismiss()
     }
 
     private fun initSwipeToDismiss() {
-        ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+        ItemTouchHelper(object :
+            ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
             override fun onMove(
                 recyclerView: RecyclerView,
                 viewHolder: RecyclerView.ViewHolder,
@@ -121,7 +140,7 @@ class NotesListActivity : AppCompatActivity() {
                 Toast.makeText(this@NotesListActivity, "Note deleted", Toast.LENGTH_SHORT).show()
             }
 
-        }).attachToRecyclerView(rvNotes)
+        }).attachToRecyclerView(binding.rvNotes)
     }
 
     private fun initViewModel() {

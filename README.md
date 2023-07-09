@@ -2,5 +2,6 @@
 [x] - Show a list of todos
 [x] - Option to create a new todo
 [x] - Option to see/edit todo
-[ ] - Option to mark todo done
+[x] - Option to mark todo done
+[ ] - Sort TODOs on the basis of their isComplete status
 [ ] - Replace async tasks with coroutines
