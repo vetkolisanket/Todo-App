@@ -13,7 +13,7 @@ class Note(
     val description: String,
     val priority: Int,
     var isCompleted: Boolean
-) {
+): Comparable<Note> {
 
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0
@@ -25,5 +25,11 @@ class Note(
         priority,
         false
     )
+
+    override fun compareTo(other: Note): Int {
+        if (this.isCompleted && other.isCompleted.not()) return -1
+        if (this.isCompleted.not() && other.isCompleted) return 1
+        return this.priority - other.priority
+    }
 
 }

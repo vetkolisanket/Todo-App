@@ -144,8 +144,8 @@ class NotesListActivity : AppCompatActivity() {
     }
 
     private fun initViewModel() {
-        notesViewModel.allNotes.observe(this, Observer {
-            adapter.submitList(it)
-        })
+        notesViewModel.allNotes.observe(this) {
+            adapter.sortListAndSubmit(it)
+        }
     }
 }

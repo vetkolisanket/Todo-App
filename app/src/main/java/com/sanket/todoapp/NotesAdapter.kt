@@ -57,6 +57,10 @@ class NotesAdapter() : ListAdapter<Note, NotesAdapter.NotesViewHolder>(DIFF_CALL
         this.callback = callback
     }
 
+    fun sortListAndSubmit(list: List<Note>) {
+        submitList(list.sorted().reversed())
+    }
+
     inner class NotesViewHolder(val binding: ItemNoteBinding) : RecyclerView.ViewHolder(binding.root) {
 
         init {
@@ -64,7 +68,6 @@ class NotesAdapter() : ListAdapter<Note, NotesAdapter.NotesViewHolder>(DIFF_CALL
                 if (adapterPosition != RecyclerView.NO_POSITION) {
                     val note = getItem(adapterPosition)
                     callback?.onCheckClick(note.id)
-//                    notifyItemChanged(adapterPosition, note.isCompleted)
                 }
             }
             binding.root.setOnClickListener {
