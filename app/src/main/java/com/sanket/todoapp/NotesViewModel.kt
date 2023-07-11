@@ -13,22 +13,30 @@ import kotlinx.coroutines.launch
 class NotesViewModel(application: Application) : AndroidViewModel(application) {
 
     private val notesRepository: NotesRepository by lazy { NotesRepository(application) }
-    val allNotes: LiveData<List<Note>> by lazy { notesRepository.allNotes }
+    val allNotes: LiveData<List<Note>> = notesRepository.getAllNotes()
 
     fun insert(note: Note) {
+        viewModelScope.launch(Dispatchers.IO) {
         notesRepository.insert(note)
+        }
     }
 
     fun update(note: Note) {
-        notesRepository.update(note)
+        viewModelScope.launch(Dispatchers.IO) {
+            notesRepository.update(note)
+        }
     }
 
     fun delete(note: Note) {
-        notesRepository.delete(note)
+        viewModelScope.launch(Dispatchers.IO) {
+            notesRepository.delete(note)
+        }
     }
 
     fun deleteAllNotes() {
-        notesRepository.deleteAll()
+        viewModelScope.launch(Dispatchers.IO) {
+            notesRepository.deleteAll()
+        }
     }
 
     fun onCheckClick(noteId: Int) {

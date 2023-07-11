@@ -5,3 +5,4 @@
 [x] - Option to mark todo done
 [x] - Sort TODOs on the basis of their isComplete status
 [ ] - Replace async tasks with coroutines
+[ ] - Migrate priorities from 1-10 to L-H

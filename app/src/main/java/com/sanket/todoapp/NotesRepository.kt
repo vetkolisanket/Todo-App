@@ -1,7 +1,6 @@
 package com.sanket.todoapp
 
 import android.app.Application
-import android.os.AsyncTask
 import androidx.lifecycle.LiveData
 
 /**
@@ -10,71 +9,32 @@ import androidx.lifecycle.LiveData
 class NotesRepository(application: Application) {
 
     private val noteDao: NoteDao
-    val allNotes: LiveData<List<Note>>
 
     init {
         val database = NoteDatabase.getInstance(application)
         noteDao = database.noteDao()
-        allNotes = noteDao.getAllNotes()
     }
 
-    fun insert(note: Note) {
-        InsertNoteAsyncTask(noteDao).execute(note)
+    fun getAllNotes(): LiveData<List<Note>> = noteDao.getAllNotes()
+
+    suspend fun insert(note: Note) {
+        noteDao.insert(note)
     }
 
-    fun update(note: Note) {
-        UpdateNoteAsyncTask(noteDao).execute(note)
+    suspend fun update(note: Note) {
+        noteDao.update(note)
     }
 
-    fun delete(note: Note) {
-        DeleteNoteAsyncTask(noteDao).execute(note)
+    suspend fun delete(note: Note) {
+        noteDao.delete(note)
     }
 
-    fun deleteAll() {
-        DeleteAllNoteAsyncTask(noteDao).execute()
+    suspend fun deleteAll() {
+        noteDao.deleteAll()
     }
 
-    fun getNote(noteId: Int): Note {
+    suspend fun getNote(noteId: Int): Note {
         return noteDao.getNote(noteId)
     }
-
-    companion object {
-        class InsertNoteAsyncTask(private val noteDao: NoteDao) : AsyncTask<Note, Void, Void>() {
-
-            @Deprecated("Deprecated in Java")
-            override fun doInBackground(vararg notes: Note): Void? {
-                noteDao.insert(notes[0])
-                return null
-            }
-        }
-
-        class UpdateNoteAsyncTask(private val noteDao: NoteDao) : AsyncTask<Note, Void, Void>() {
-
-            @Deprecated("Deprecated in Java")
-            override fun doInBackground(vararg notes: Note): Void? {
-                noteDao.update(notes[0])
-                return null
-            }
-        }
-
-        class DeleteNoteAsyncTask(private val noteDao: NoteDao) : AsyncTask<Note, Void, Void>() {
-
-            @Deprecated("Deprecated in Java")
-            override fun doInBackground(vararg notes: Note): Void? {
-                noteDao.delete(notes[0])
-                return null
-            }
-        }
-
-        class DeleteAllNoteAsyncTask(private val noteDao: NoteDao) : AsyncTask<Void, Void, Void>() {
-
-            @Deprecated("Deprecated in Java")
-            override fun doInBackground(vararg voids: Void): Void? {
-                noteDao.deleteAll()
-                return null
-            }
-        }
-    }
-
 
 }
