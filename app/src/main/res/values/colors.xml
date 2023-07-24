@@ -3,4 +3,7 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
+    <color name="holo_red_ten_percent_opacity">#19ff4444</color>
+    <color name="holo_orange_ten_percent_opacity">#19ffbb33</color>
+    <color name="holo_blue_ten_percent_opacity">#1933b5e5</color>
 </resources>

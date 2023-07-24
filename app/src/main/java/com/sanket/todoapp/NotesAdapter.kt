@@ -1,8 +1,10 @@
 package com.sanket.todoapp
 
 import android.graphics.Paint
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -39,16 +41,6 @@ class NotesAdapter() : ListAdapter<Note, NotesAdapter.NotesViewHolder>(DIFF_CALL
         holder.bind(getItem(position))
     }
 
-    override fun onBindViewHolder(
-        holder: NotesViewHolder,
-        position: Int,
-        payloads: MutableList<Any>
-    ) {
-        if (payloads.isNotEmpty() && payloads.first() is Boolean) {
-            holder.setIsCompleted(payloads.first() as Boolean)
-        } else super.onBindViewHolder(holder, position, payloads)
-    }
-
     fun getNoteAt(position: Int): Note {
         return getItem(position)
     }
@@ -81,12 +73,22 @@ class NotesAdapter() : ListAdapter<Note, NotesAdapter.NotesViewHolder>(DIFF_CALL
             binding.apply {
                 tvTitle.text = note.title
                 tvDescription.text = note.description
-                tvPriority.text = note.priority.toString()
                 setIsCompleted(note.isCompleted)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    binding.clNote.setBackgroundColor(ContextCompat.getColor(binding.cvNote.context, getCardBackground(note.getNotePriority())))
+                }
             }
         }
 
-        fun setIsCompleted(isCompleted: Boolean) {
+        private fun getCardBackground(notePriority: Note.Priority): Int {
+            return when (notePriority) {
+                Note.Priority.HIGH -> R.color.holo_red_ten_percent_opacity
+                Note.Priority.MEDIUM -> R.color.holo_orange_ten_percent_opacity
+                Note.Priority.LOW -> R.color.holo_blue_ten_percent_opacity
+            }
+        }
+
+        private fun setIsCompleted(isCompleted: Boolean) {
             binding.apply {
                 if (isCompleted) {
                     ivCheck.setImageResource(R.drawable.ic_check_box)

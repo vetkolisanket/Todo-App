@@ -26,10 +26,22 @@ class Note(
         false
     )
 
+    enum class Priority {
+        LOW, MEDIUM, HIGH
+    }
+
     override fun compareTo(other: Note): Int {
         if (this.isCompleted && other.isCompleted.not()) return -1
         if (this.isCompleted.not() && other.isCompleted) return 1
         return this.priority - other.priority
+    }
+
+    fun getNotePriority(): Priority {
+        return when (priority) {
+            in 7..10 -> Priority.HIGH
+            in 4..6 -> Priority.MEDIUM
+            else -> Priority.LOW
+        }
     }
 
 }
