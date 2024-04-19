@@ -9,14 +9,7 @@ import javax.inject.Inject
 /**
  * Created by Sanket on 2019-07-12.
  */
-class NotesRepository @Inject constructor(@ApplicationContext context: Context) {
-
-    private val noteDao: NoteDao
-
-    init {
-        val database = NoteDatabase.getInstance(context)
-        noteDao = database.noteDao()
-    }
+class NotesRepository @Inject constructor(private val noteDao: NoteDao) {
 
     fun getAllNotes(): LiveData<List<Note>> = noteDao.getAllNotes()
 

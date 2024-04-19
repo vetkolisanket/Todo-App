@@ -21,19 +21,6 @@ abstract class NoteDatabase : RoomDatabase() {
 
     companion object {
 
-        private var instance: NoteDatabase? = null
-
-        @JvmStatic
-        fun getInstance(context: Context): NoteDatabase {
-            if (instance == null) {
-                instance = Room.databaseBuilder(context, NoteDatabase::class.java, "note_database")
-                    .addMigrations(migration_1_2)
-                    .addCallback(roomCallback)
-                    .build()
-            }
-            return instance as NoteDatabase
-        }
-
         val roomCallback = object : Callback() {
             override fun onCreate(db: SupportSQLiteDatabase) {
                 super.onCreate(db)
