@@ -6,13 +6,16 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.sanket.todoapp.databinding.ActivityNotesListBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class NotesListActivity : AppCompatActivity() {
 
     companion object {
@@ -20,9 +23,7 @@ class NotesListActivity : AppCompatActivity() {
         const val REQUEST_EDIT_NOTE = 1002
     }
 
-    private val notesViewModel by unsafeLazy {
-        ViewModelProviders.of(this).get(NotesViewModel::class.java)
-    }
+    private val notesViewModel: NotesViewModel by viewModels()
     private val adapter by unsafeLazy { NotesAdapter() }
     private val binding: ActivityNotesListBinding by lazy {
         ActivityNotesListBinding.inflate(

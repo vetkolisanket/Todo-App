@@ -1,17 +1,20 @@
 package com.sanket.todoapp
 
 import android.app.Application
+import android.content.Context
 import androidx.lifecycle.LiveData
+import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
 
 /**
  * Created by Sanket on 2019-07-12.
  */
-class NotesRepository(application: Application) {
+class NotesRepository @Inject constructor(@ApplicationContext context: Context) {
 
     private val noteDao: NoteDao
 
     init {
-        val database = NoteDatabase.getInstance(application)
+        val database = NoteDatabase.getInstance(context)
         noteDao = database.noteDao()
     }
 

@@ -6,6 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -25,7 +26,7 @@ abstract class NoteDatabase : RoomDatabase() {
         @JvmStatic
         fun getInstance(context: Context): NoteDatabase {
             if (instance == null) {
-                instance = Room.databaseBuilder(context.applicationContext, NoteDatabase::class.java, "note_database")
+                instance = Room.databaseBuilder(context, NoteDatabase::class.java, "note_database")
                     .addMigrations(migration_1_2)
                     .addCallback(roomCallback)
                     .build()

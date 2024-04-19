@@ -3,21 +3,26 @@ package com.sanket.todoapp
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 /**
  * Created by Sanket on 2019-07-18.
  */
-class NotesViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val notesRepository: NotesRepository by lazy { NotesRepository(application) }
+@HiltViewModel
+class NotesViewModel @Inject constructor(private val notesRepository: NotesRepository) :
+    ViewModel() {
+
     val allNotes: LiveData<List<Note>> = notesRepository.getAllNotes()
 
     fun insert(note: Note) {
         viewModelScope.launch(Dispatchers.IO) {
-        notesRepository.insert(note)
+            notesRepository.insert(note)
         }
     }
 
