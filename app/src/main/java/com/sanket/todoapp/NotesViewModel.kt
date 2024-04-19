@@ -21,31 +21,31 @@ class NotesViewModel @Inject constructor(private val notesRepository: NotesRepos
     val allNotes: LiveData<List<Note>> = notesRepository.getAllNotes()
 
     fun insert(note: Note) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             notesRepository.insert(note)
         }
     }
 
     fun update(note: Note) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             notesRepository.update(note)
         }
     }
 
     fun delete(note: Note) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             notesRepository.delete(note)
         }
     }
 
     fun deleteAllNotes() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             notesRepository.deleteAll()
         }
     }
 
     fun onCheckClick(noteId: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             val note = notesRepository.getNote(noteId)
             note.isCompleted = note.isCompleted.not()
             update(note)
